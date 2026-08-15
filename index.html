@@ -10,6 +10,14 @@
 <link rel="stylesheet" href="TemplateData/style.css"/>
 <!-- Yandex Games SDK -->
 <script src="sdk.js"></script>
+   <script>
+        var sdk;
+       YaGames.init()
+        .then(ysdk => {
+            sdk = ysdk;
+            window.ysdk = ysdk;
+          });
+    </script> 
 <style>
   body {
     /* Убираем скролл */
