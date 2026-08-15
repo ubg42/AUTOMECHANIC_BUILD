@@ -143,14 +143,52 @@
         });
       };
         function Start(){
-        var data = sdk.environment;
-        //console.log("LANG_JS"+data);
-        unityI.SendMessage('LANG','SET_LANG',JSON.stringify(data));
+var sdk = null;
+var sdkReady = null;
+
+sdkReady = YaGames.init()
+    .then(ysdk => {
+        sdk = ysdk;
+        window.ysdk = ysdk;
+        console.log("Yandex SDK initialized");
+        return ysdk;
+    })
+    .catch(error => {
+        console.error("Yandex SDK initialization failed:", error);
+        return null;
+    });
+
+async function Start() {
+    const ysdk = await sdkReady;
+
+    if (!ysdk) {
+        console.warn("Yandex SDK isn't available.");
+        return;
+    }
+
+    if (!unityI) {
+        console.warn("Unity instance isn't ready yet.");
+        return;
+    }
+
+    const data = ysdk.environment;
+
+    console.log("Yandex environment:", data);
+
+    unityI.SendMessage(
+        'LANG',
+        'SET_LANG',
+        JSON.stringify(data)
+    );
 }
-        function GameReady(){
-             ysdk.features.LoadingAPI?.ready()
-            console.log("Game loaded ...");
-        }
+
+function GameReady() {
+    if (window.ysdk?.features?.LoadingAPI) {
+        window.ysdk.features.LoadingAPI.ready();
+    }
+
+    console.log("Game loaded ...");
+}
       document.body.appendChild(script);
     </script>
 </body>
